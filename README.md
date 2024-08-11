@@ -10,4 +10,4 @@ Quick and dirty sample articles api implementation
 
 ## Design outline:
 A basic CRUD built with minimal API.\
-Further details on the [Wiki](https://github.com/Vikcoc/basic-article-api/wiki/Resources).
+Further details on the [Wiki](https://github.com/Vikcoc/basic-article-api/wiki).
