@@ -13,7 +13,7 @@ namespace basic_article_api.ApplicationExceptions
                 return false; //it is automatically logged
 
 
-            httpContext.Response.StatusCode = exception switch 
+            httpContext.Response.StatusCode = exception switch
             {
                 BadRequestException => 400,
                 ServiceUnavailableException => 503,

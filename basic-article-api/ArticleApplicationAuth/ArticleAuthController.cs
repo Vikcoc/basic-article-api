@@ -8,13 +8,14 @@ namespace basic_article_api.ArticleApplicationAuth
     {
         public static IEndpointRouteBuilder AddAuthRoutes(this IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapPost("auth/google", ProcessGoogleTokenAsync); // could've used get and put the token in the route, but nah
+            endpoints.MapPost("api/auth/google", ProcessGoogleTokenAsync); // could've used get and put the token in the route, but nah
 
             return endpoints;
         }
         public static IEndpointRouteBuilder AddDevAuth(this IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapPost("auth/dev/{email}", DevLocalToken); // won't use a different strings class because the hardoced strings are already close by
+            endpoints.MapPost("api/auth/dev/{email}", DevLocalToken); // won't use a different approach for routes because i don't want to get required service config, get root route for api
+            //and because a reverse proxy can do that for me
 
             return endpoints;
         }

@@ -1,5 +1,6 @@
 using basic_article_api.ApplicationExceptions;
 using basic_article_api.ArticleApplicationAuth;
+using basic_article_api.ArticleHandling;
 using basic_article_api.DevTests;
 using Microsoft.IdentityModel.Tokens;
 
@@ -12,6 +13,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<HttpClient>();
 builder.Services.AddAuthServices();
+builder.Services.AddArticleServices();
 
 builder.Services.AddAuthentication().AddJwtBearer(opt =>
 {
@@ -49,11 +51,13 @@ if (app.Environment.IsDevelopment())
     //only in dev we have unvalidated tokens
     app.AddDevAuth();
 }
-
+//else
+//{
+app.UseExceptionHandler();
+//}
 app.UseAuthorization();
 
 app.AddAuthRoutes();
-
-app.UseExceptionHandler();
+app.AddArticleRoutes();
 
 app.Run();
