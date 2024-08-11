@@ -5,7 +5,7 @@ namespace basic_article_api.ArticleHandling.ArticleData
 {
     public class ArticleRepoRandom : IArticleRepo
     {
-        private readonly Random _random = new Random();
+        private readonly Random _random = new();
         public void CreateArticle(ArticleCreateDto newArticle)
         {}
 
@@ -40,9 +40,7 @@ namespace basic_article_api.ArticleHandling.ArticleData
         }
 
         public void UpdateArticle(uint articleId, ArticleCreateDto article)
-        {
-            
-        }
+        {}
 
         private string RandomString(int length)
         {

@@ -16,20 +16,10 @@ namespace basic_article_api.ArticleHandling
             endpoints.MapGet("api/articles/{id}", GetArticle)
                 .RequireAuthorization(p => p.RequireClaim(ArticleApplicationAuthConstants.PermissionSet, ArticleApplicationAuthConstants.PermissionSetReader));
             endpoints.MapPost("api/articles", CreateArticle)
-                .AddEndpointFilter(async (efiContext, next) =>
-                {
-                    var tdparam = efiContext.GetArgument<ArticleCreateDto>(0);
-                    ArbitraryValidationThrow(tdparam);
-                    return await next(efiContext);
-                })
+                .AddEndpointFilter(ValidateArticle)
                 .RequireAuthorization(p => p.RequireClaim(ArticleApplicationAuthConstants.PermissionSet, ArticleApplicationAuthConstants.PermissionSetAdmin));
             endpoints.MapPut("api/articles/{id}", UpdateArticle)
-                .AddEndpointFilter(async (efiContext, next) =>
-                {
-                    var tdparam = efiContext.GetArgument<ArticleCreateDto>(0);
-                    ArbitraryValidationThrow(tdparam);
-                    return await next(efiContext);
-                })
+                .AddEndpointFilter(ValidateArticle)
                 .RequireAuthorization(p => p.RequireClaim(ArticleApplicationAuthConstants.PermissionSet, ArticleApplicationAuthConstants.PermissionSetAdmin));
             endpoints.MapDelete("api/articles/{id}", DeleteArticle)
                 .RequireAuthorization(p => p.RequireClaim(ArticleApplicationAuthConstants.PermissionSet, ArticleApplicationAuthConstants.PermissionSetAdmin));
@@ -81,16 +71,16 @@ namespace basic_article_api.ArticleHandling
             => repo.DeleteArticle(id);
 
 
-        private static void ArbitraryValidationThrow(ArticleCreateDto article)
+        public static async ValueTask<object?> ValidateArticle(EndpointFilterInvocationContext efiContext, EndpointFilterDelegate next)
         {
-            // new validation dropped https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/min-api-filters?view=aspnetcore-8.0#validate-an-object-with-a-filter
-
+            var article = (ArticleCreateDto) efiContext.Arguments.First(x => x is ArticleCreateDto)!;
             if (article.Title.Length > 100)
                 throw new BadRequestException("Title is too long");
             if (article.Content.Length > 1000)
                 throw new BadRequestException("Content is too long");
             if (article.Title.Contains("peanut") || article.Content.Contains("peanut"))
                 throw new BadRequestException("Article cannot contain the word 'peanut'");
+            return await next(efiContext);
         }
     }
 }
