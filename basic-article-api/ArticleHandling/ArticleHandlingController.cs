@@ -39,8 +39,24 @@ namespace basic_article_api.ArticleHandling
 
         public static void AddArticleServices(this IServiceCollection services)
         {
-            services.AddSingleton<ArticleDbSet>(); // a database kinda is global
+            services.AddSingleton<ArticleDbSet>(s =>
+            {
+                var seeder = s.GetRequiredKeyedService<ArticleRepoRandom>("Seeder");
+                var artDb = new ArticleDbSet();
+                foreach (var art in seeder.GetArticles(0, 50))
+                    artDb.AddArticle(new ArticleModel
+                    {
+                        Title = art.Title,
+                        Content = art.Content,
+                        PublishedDate = art.PublishedDate
+                    });
+                return artDb;
+
+            }); // a database kinda is global
             services.AddScoped<IArticleRepo, ArticleRepo>(); // scoped by the convention set by Ef core (because the tracker, though we don't have tracker here)
+            //services.AddScoped<IArticleRepo, ArticleRepoRandom>(); for fun, and because i needed a reason to have an interface
+            services.AddKeyedSingleton<ArticleRepoRandom>("Seeder");
+
         }
 
         public static List<ArticleDto> GetArticles([FromQuery] uint skip, [FromQuery] uint onPage, [FromServices] IArticleRepo repo)
