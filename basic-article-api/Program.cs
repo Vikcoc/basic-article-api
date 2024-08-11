@@ -1,4 +1,6 @@
+using basic_article_api.ApplicationExceptions;
 using basic_article_api.ArticleApplicationAuth;
+using basic_article_api.DevTests;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +32,10 @@ builder.Services.AddAuthentication().AddJwtBearer(opt =>
 });
 builder.Services.AddAuthorization();
 
+builder.Services.AddExceptionHandler<LittleExceptionHandler>();
+builder.Services.AddProblemDetails();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -37,6 +43,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    app.AddTestRoutes();
 
     //only in dev we have unvalidated tokens
     app.AddDevAuth();
@@ -46,9 +54,6 @@ app.UseAuthorization();
 
 app.AddAuthRoutes();
 
-app.MapGet("/hello", () =>
-{
-    return TypedResults.Ok("Hello World!");
-}).RequireAuthorization(p => p.RequireClaim(ArticleApplicationAuthConstants.PermissionSet, ArticleApplicationAuthConstants.PermissionSetReader));
+app.UseExceptionHandler();
 
 app.Run();
