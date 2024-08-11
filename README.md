@@ -9,9 +9,5 @@ Quick and dirty sample articles api implementation
 5. Organise code in the spirit of microservices (self contained verticalities).
 
 ## Design outline:
-- Use minimal api.
-- Use JWT.
-- Have "Sign in with Google" endpoint (interfaced service because multiple providers for OAuth can exist).
-- Have a generate token endpoint (in dev mode only) for ease of testing.
-- Have reader and admin roles for crud purposes (store them in hardcoded repo because we can use them with generate token endpoint)
-- CRUD for articles
+A basic CRUD built with minimal API.\
+Further details on the [Wiki](https://github.com/Vikcoc/basic-article-api/wiki/Resources).
