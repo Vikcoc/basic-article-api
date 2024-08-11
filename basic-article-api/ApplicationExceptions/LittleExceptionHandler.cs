@@ -17,6 +17,7 @@ namespace basic_article_api.ApplicationExceptions
             {
                 BadRequestException => 400,
                 ServiceUnavailableException => 503,
+                NotFoundException => 404,
                 _ => 500 // if i'm throwing something that i don't declare here it's a problem
             };
 
